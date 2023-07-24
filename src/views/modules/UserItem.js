@@ -9,11 +9,11 @@ function UserItem({ id, name, age, location, phone, gpa }) {
       <td>${gpa}</td>
       <td>
         <button class="action-btn btn-edit" data-id="${id}">
-          <i class="ti-pencil-alt edit-icon" ></i>
+        <i class="fa-solid fa-pen"></i>
         </button>
   
         <button class="action-btn btn-delete delete-icon" data-id="${id}">
-          <i class="ti-trash"></i>
+        <i class="fa-solid fa-trash"></i>
         </button>
       </td>
     </tr>

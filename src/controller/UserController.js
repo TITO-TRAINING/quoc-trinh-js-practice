@@ -19,7 +19,7 @@ class UserController {
   };
 
   handleAddUser = (user) => {
-    this.userService.add(user);
+    this.userService.addUser(user);
   };
 
   // handleEditUser = (id, user) => {

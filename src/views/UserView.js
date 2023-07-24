@@ -1,6 +1,8 @@
 import UserTable from "./modules/UserTable";
+import Header from "./components/Header";
 import Toast from "./components/Toast";
 import UserItem from "./modules/UserItem";
+import Modal from "./components/Modal";
 
 class UserView {
   constructor() {
@@ -9,20 +11,37 @@ class UserView {
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add("wrapper");
 
+    this.myToast = document.createElement("div");
+    this.myToast.classList.add("myToast");
+
     this.container = document.createElement("div");
     this.container.classList.add("container");
-    this.container.innerHTML += UserTable();
+    this.container.innerHTML = Header() + UserTable();
 
+    this.header = document.createElement("div");
+    this.header.innerHTML = Modal();
+
+    this.container.appendChild(this.header);
+    this.app.append(this.myToast);
     this.app.appendChild(this.wrapper);
     this.wrapper.appendChild(this.container);
 
     this.table = document.querySelector(".users-list");
   }
 
+  createToast = (mes) => {
+    const myToast = Toast(mes);
+    document.querySelector(".myToast").innerHTML = myToast;
+
+    const closeBtn = document.querySelector(".remove");
+    closeBtn.onclick = function () {
+      document.querySelector(".myToast").style.display = "none";
+    };
+  };
   displayUsers(users) {
     // Show default message
     if (users.length === 0) {
-      Toast("warning", "Page is empty");
+      this.createToast("Page is empty");
     } else {
       // Create nodes
       users.forEach((user) => {

@@ -1,8 +1,5 @@
 function UserTable() {
   return `
-    <div class="table-title">
-      <h1>User Management</h1>
-    </div>
     <table class="table">
       <thead class="thead-dark">
         <tr>
