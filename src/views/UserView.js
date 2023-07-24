@@ -27,6 +27,13 @@ class UserView {
     this.wrapper.appendChild(this.container);
 
     this.table = document.querySelector(".users-list");
+    this.form = document.querySelector("form");
+
+    this.inputName = document.querySelector("#name");
+    this.inputAge = document.querySelector("#age");
+    this.inputPhone = document.querySelector("#phone");
+    this.inputLocation = document.querySelector("#location");
+    this.inputGpa = document.querySelector("#gpa");
   }
 
   createToast = (mes) => {
@@ -38,71 +45,66 @@ class UserView {
       document.querySelector(".myToast").style.display = "none";
     };
   };
-  displayUsers(users) {
-    // Show default message
-    if (users.length === 0) {
-      this.createToast("Page is empty");
-    } else {
-      // Create nodes
-      users.forEach((user) => {
-        this.table.innerHTML += UserItem(user);
-      });
-    }
+
+  get _nameText() {
+    return this.inputName.value;
   }
 
-  // _initLocalListeners() {
-  //   this.userList.addEventListener('input', (event) => {
-  //     if (event.target.className === 'editable') {
-  //       this._temporaryAgeText = event.target.innerText;
-  //     }
-  //   });
-  // }
+  get _ageText() {
+    return this.inputAge.value;
+  }
+
+  get _locationText() {
+    return this.inputLocation.value;
+  }
+
+  get _phoneText() {
+    return this.inputPhone.value;
+  }
+
+  get _gpaText() {
+    return this.inputGpa.value;
+  }
+
+  hideModal() {
+    const modalHide = document.querySelector("#exampleModal");
+    modalHide.style.display = "none";
+
+    // Tìm tất cả các phần tử .modal-backdrop.fade.show
+    const modalBackdrops = document.querySelectorAll(
+      ".modal-backdrop.fade.show",
+    );
+
+    // Ẩn phần tử .modal-backdrop.fade.show của modal hiện tại
+    if (modalBackdrops.length > 0) {
+      modalBackdrops[modalBackdrops.length - 1].style.display = "none";
+      modalBackdrops[modalBackdrops.length - 2].style.display = "none";
+    }
+
+    document.body.classList.remove("modal-open");
+  }
+
+  displayUsers(users) {
+    this.table.innerHTML = "";
+    users.forEach((user) => {
+      this.table.innerHTML += UserItem(user);
+    });
+    this.hideModal();
+  }
 
   bindAddUser(handler) {
     this.form.addEventListener("submit", (event) => {
       event.preventDefault();
-
-      if (this._nameText) {
-        handler({
-          name: this._nameText,
-          age: this._ageText,
-        });
-        this._resetInput();
-      }
+      handler({
+        name: this._nameText,
+        age: this._ageText,
+        location: this._locationText,
+        phone: this._phoneText,
+        gpa: this._gpaText,
+      });
     });
+    this.hideModal();
   }
-
-  // bindDeleteUser(handler) {
-  //   this.userList.addEventListener('click', (event) => {
-  //     if (event.target.className === 'delete') {
-  //       const id = event.target.parentElement.id;
-
-  //       handler(id);
-  //     }
-  //   });
-  // }
-
-  // bindEditUser(handler) {
-  //   this.userList.addEventListener('focusout', (event) => {
-  //     if (this._temporaryAgeText) {
-  //       const id = event.target.parentElement.id;
-  //       const key = 'age';
-
-  //       handler(id, { [key]: this._temporaryAgeText });
-  //       this._temporaryAgeText = '';
-  //     }
-  //   });
-  // }
-
-  // bindToggleUser(handler) {
-  //   this.userList.addEventListener('change', (event) => {
-  //     if (event.target.type === 'checkbox') {
-  //       const id = event.target.parentElement.id;
-
-  //       handler(id);
-  //     }
-  //   });
-  // }
 }
 
 export default UserView;
