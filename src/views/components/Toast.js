@@ -1,3 +1,4 @@
+
 function Toast(mes) {
   return `
 <div class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">

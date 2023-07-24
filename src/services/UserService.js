@@ -33,6 +33,7 @@ class UserService {
       });
       const newUser = await response.json();
       this.users.push(new User(newUser));
+      console.log(1);
       this.onUserListChanged(this.users);
     } catch (error) {
       console.error("Fail to add user:", error);
