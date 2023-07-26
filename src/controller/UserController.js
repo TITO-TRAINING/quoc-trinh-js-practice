@@ -21,18 +21,6 @@ class UserController {
   handleAddUser = (user) => {
     this.userService.addUser(user);
   };
-
-  // handleEditUser = (id, user) => {
-  //   this.userService.edit(id, user);
-  // };
-
-  // handleDeleteUser = id => {
-  //   this.userService.delete(id);
-  // };
-
-  // handleToggleUser = id => {
-  //   this.userService.toggle(id);
-  // };
 }
 
 export default UserController;

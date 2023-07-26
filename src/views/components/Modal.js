@@ -24,12 +24,8 @@ function Modal() {
                     <label for="gpa">GPA</label>
                     <input type="text" name="gpa" id="gpa" maxlength="100">
 
-                    
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
