@@ -6,9 +6,8 @@ class UserController {
     // Explicit this binding
     this.userService.bindUserListChanged(this.onUserListChanged);
     this.userView.bindAddUser(this.handleAddUser);
-    // this.userView.bindEditUser(this.handleEditUser);
-    // this.userView.bindDeleteUser(this.handleDeleteUser);
-    // this.userView.bindToggleUser(this.handleToggleUser);
+    this.userView.openModalAddBtn();
+    this.userView.bindEditUser(this.handleEditUser);
 
     // Display initial users
     this.onUserListChanged(this.userService.users);
@@ -20,6 +19,10 @@ class UserController {
 
   handleAddUser = (user) => {
     this.userService.addUser(user);
+  };
+
+  handleEditUser = (id, user) => {
+    this.userService.editUser(id, user);
   };
 }
 

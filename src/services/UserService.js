@@ -22,6 +22,17 @@ class UserService {
     }
   }
 
+  async fetchUserById(id) {
+    try {
+      const response = await fetch(`${this.apiUrl}/${id}`);
+      const user = await response.json();
+      return new User(user);
+    } catch (error) {
+      console.error("Fail to fetch user by id:", error);
+      return null;
+    }
+  }
+
   async addUser(user) {
     try {
       const response = await fetch(this.apiUrl, {
@@ -39,56 +50,33 @@ class UserService {
     }
   }
 
-  // async editUser(id, userToEdit) {
-  //   try {
-  //     const response = await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(userToEdit),
-  //     });
-  //     const updatedUser = await response.json();
-  //     this.users = this.users.map((user) =>
-  //       user.id === id ? new User(updatedUser) : user,
-  //     );
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Fail to edit user:", error);
-  //   }
-  // }
+  async editUser(id, userToEdit) {
+    const user = this.users.find((item) => item.id == id);
+    user.name = userToEdit.name;
+    this.onUserListChanged(this.users);
 
-  // async deleteUser(id) {
-  //   try {
-  //     await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "DELETE",
-  //     });
-  //     this.users = this.users.filter((user) => user.id !== id);
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Fail to delete user:", error);
-  //   }
-  // }
+    // try {
+    //   const user = this.users.find((item => item.id == id))
+    //   console.log(user)
+    //   user.name = userToEdit.name
+    //   const response = await fetch(`${this.apiUrl}/${id}`, {
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(this.users),
 
-  // async toggleUserComplete(id) {
-  //   try {
-  //     const user = this.users.find((user) => user.id === id);
-  //     const response = await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ check: !user.check }),
-  //     });
-  //     const updatedUser = await response.json();
-  //     this.users = this.users.map((user) =>
-  //       user.id === id ? new User(updatedUser) : user,
-  //     );
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Error when changing user authentication status:", error);
-  //   }
-  // }
+    //   });
+    //   const updatedUser = await response.json();
+    //   // this.users = this.users.map((user) =>
+    //   //   user.id === id ? new User(updatedUser) : user,
+    //   // );
+
+    //   this.onUserListChanged(updatedUser);
+    // } catch (error) {
+    //   console.error("Fail to edit user:", error);
+    // }
+  }
 }
 
 export default UserService;

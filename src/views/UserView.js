@@ -1,13 +1,13 @@
 import UserTable from "./modules/UserTable";
 import Header from "./components/Header";
 import Toast from "./components/Toast";
-import UserItem from "./modules/UserItem";
 import Modal from "./components/Modal";
+import UserService from "../services/UserService";
 
 class UserView {
   constructor() {
     this.app = document.querySelector("#root");
-
+    this.app.innerHTML += Modal();
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add("wrapper");
 
@@ -18,8 +18,8 @@ class UserView {
     this.container.classList.add("container");
     this.container.innerHTML = Header() + UserTable();
 
+    // this.modal = Modal()
     this.header = document.createElement("div");
-    this.header.innerHTML = Modal();
 
     this.container.appendChild(this.header);
     this.app.append(this.myToast);
@@ -66,30 +66,89 @@ class UserView {
     return this.inputGpa.value;
   }
 
+  get idUser() {
+    return document.querySelector("#id").value;
+  }
+
+  clearForm() {
+    this.inputName.value = "";
+    this.inputAge.value = "";
+    this.inputLocation.value = "";
+    this.inputPhone.value = "";
+    this.inputGpa.value = "";
+  }
+
   hideModal() {
-    const modalHide = document.querySelector("#exampleModal");
-    modalHide.style.display = "none";
+    const modal = document.querySelector(".modalCustom");
+    modal.classList.remove("show");
+    modal.classList.add("hide");
+  }
 
-    // Tìm tất cả các phần tử .modal-backdrop.fade.show
-    const modalBackdrops = document.querySelectorAll(
-      ".modal-backdrop.fade.show",
-    );
+  openModal() {
+    const modal = document.querySelector(".modalCustom");
+    modal.classList.remove("hide");
+    modal.classList.add("show");
+  }
 
-    // Ẩn phần tử .modal-backdrop.fade.show của modal hiện tại
-    if (modalBackdrops.length > 0) {
-      modalBackdrops[modalBackdrops.length - 1].style.display = "none";
-      modalBackdrops[modalBackdrops.length - 2].style.display = "none";
+  openModalAddBtn() {
+    const inserBtn = document.querySelector(".btn-add");
+    const modal = document.querySelector(".modalCustom");
+    const modalContent = document.querySelector(".modalcontent");
+    inserBtn.addEventListener("click", () => {
+      if (modal.classList.contains("hide")) {
+        modal.classList.remove("hide");
+        modal.classList.add("show");
+      }
+    });
+
+    modal.addEventListener("click", function () {
+      modal.classList.remove("show");
+      modal.classList.add("hide");
+    });
+
+    modalContent.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  async getUserById(id) {
+    try {
+      const userService = new UserService();
+      const user = await userService.fetchUserById(id);
+      if (user) {
+        return user;
+      } else {
+        console.log("Không tìm thấy người dùng với id:", id);
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      return null;
     }
-
-    document.body.classList.remove("modal-open");
   }
 
   displayUsers(users) {
-    this.table.innerHTML = "";
-    users.forEach((user) => {
-      this.table.innerHTML += UserItem(user);
+    this.users = users;
+    let temp = "";
+    users.map(({ id, name, age, location, phone, gpa }) => {
+      temp += `<tr key=${id}>
+      <td>#${id}</td>
+      <td>${name}</td>
+      <td>${age}</td>
+      <td>${location}</td>
+      <td>${phone}</td>
+      <td>${gpa}</td>
+      <td>
+        <button class="btn btn-edit position-relative z-index-3" data-id="${id}">
+        Edit
+        </button>
+        <button class="action-btn btn-delete delete-icon" data-id="${id}" >
+        Delete
+        </button>
+      </td>
+    </tr>`;
     });
-    this.hideModal();
+    this.table.innerHTML = temp;
   }
 
   bindAddUser(handler) {
@@ -102,8 +161,44 @@ class UserView {
         phone: this._phoneText,
         gpa: this._gpaText,
       });
+      this.clearForm();
+      this.hideModal();
     });
-    this.hideModal();
+  }
+
+  bindEditUser(handler) {
+    this.table.addEventListener("click", (event) => {
+      if (event.target.classList.contains("btn-edit")) {
+        const userId = event.target.dataset.id;
+        this.getUserById(userId).then((user) => {
+          if (user) {
+            this.populateModal(user);
+            const saveChangesBtn = document.querySelector(".btn-save");
+            saveChangesBtn.addEventListener("click", () => {
+              const editedUser = {
+                name: this._nameText,
+                age: this._ageText,
+                location: this._locationText,
+                phone: this._phoneText,
+                gpa: this._gpaText,
+              };
+              handler(userId, editedUser);
+              this.hideModal();
+            });
+          }
+        });
+      }
+    });
+  }
+
+  populateModal(user) {
+    this.inputName.value = user.name;
+    this.inputAge.value = user.age;
+    this.inputLocation.value = user.location;
+    this.inputPhone.value = user.phone;
+    this.inputGpa.value = user.gpa;
+
+    this.openModal();
   }
 }
 
