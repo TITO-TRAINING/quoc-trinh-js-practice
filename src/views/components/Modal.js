@@ -3,9 +3,6 @@ function Modal() {
 <div class="modalCustom hide">
     <div class="overlay"></div>
     <div class="modalcontent">
-        <div class="modalheader">
-            <h5 class="modal-title">User Form</h5>
-        </div>
         <div class="modal_body">
             <form class="form-group" action="javascript:void(0)">
                 <input type="hidden" id="id">
@@ -24,9 +21,9 @@ function Modal() {
                 <label for="gpa">GPA</label>
                 <input type="text" name="gpa" id="gpa" maxlength="100">
     
-                <button type="submit" class="btn btn-primary btn-save">Save changes</button>
+                <button type="submit" class="btn btn-primary btn-save">Save</button>
+                <button type="button" class="btn btn-primary btn-update hide">Update</button>
             </form>
-        </div>
     </div>
 </div>
 `;

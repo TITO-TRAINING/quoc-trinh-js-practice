@@ -1,9 +1,11 @@
 import User from "../model/userModel";
+import axios from "axios";
 
 class UserService {
   constructor() {
     this.apiUrl = "http://localhost:3000/users";
     this.users = [];
+    this.onUserListChanged = null;
     this.fetchUsers();
   }
 
@@ -13,9 +15,10 @@ class UserService {
 
   async fetchUsers() {
     try {
-      const response = await fetch(this.apiUrl);
-      const users = await response.json();
-      this.users = users.map((user) => new User(user));
+      let { data } = await axios.get(this.apiUrl);
+      if (data) {
+        this.users = data.map((user) => new User(user));
+      }
       this.onUserListChanged(this.users);
     } catch (error) {
       console.error("Fail to load user list:", error);
@@ -24,9 +27,8 @@ class UserService {
 
   async fetchUserById(id) {
     try {
-      const response = await fetch(`${this.apiUrl}/${id}`);
-      const user = await response.json();
-      return new User(user);
+      const { data } = await axios.get(`${this.apiUrl}/${id}`);
+      return new User(data);
     } catch (error) {
       console.error("Fail to fetch user by id:", error);
       return null;
@@ -35,47 +37,38 @@ class UserService {
 
   async addUser(user) {
     try {
-      const response = await fetch(this.apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
-      const newUser = await response.json();
-      this.users.push(new User(newUser));
+      const { data } = await axios.post(this.apiUrl, user);
+      if (data) {
+        this.users.push(new User(data));
+        console.log(data);
+      }
       this.onUserListChanged(this.users);
     } catch (error) {
       console.error("Fail to add user:", error);
     }
   }
 
-  async editUser(id, userToEdit) {
-    const user = this.users.find((item) => item.id == id);
-    user.name = userToEdit.name;
-    this.onUserListChanged(this.users);
+  async editUser(id, user) {
+    try {
+      const { data } = await axios.patch(`${this.apiUrl}/${id}`, user);
+      if (data) {
+        const userToEdit = this.users.find((item) => item.id == id);
+        if (!userToEdit) {
+          console.error("User not found");
+          return;
+        }
 
-    // try {
-    //   const user = this.users.find((item => item.id == id))
-    //   console.log(user)
-    //   user.name = userToEdit.name
-    //   const response = await fetch(`${this.apiUrl}/${id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(this.users),
+        userToEdit.name = data.name;
+        userToEdit.age = data.age;
+        userToEdit.location = data.location;
+        userToEdit.phone = data.phone;
+        userToEdit.gpa = data.gpa;
 
-    //   });
-    //   const updatedUser = await response.json();
-    //   // this.users = this.users.map((user) =>
-    //   //   user.id === id ? new User(updatedUser) : user,
-    //   // );
-
-    //   this.onUserListChanged(updatedUser);
-    // } catch (error) {
-    //   console.error("Fail to edit user:", error);
-    // }
+        this.onUserListChanged(this.users);
+      }
+    } catch (error) {
+      console.error("Fail to edit user:", error);
+    }
   }
 }
 

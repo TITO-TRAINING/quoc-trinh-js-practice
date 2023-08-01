@@ -11,6 +11,8 @@ class UserController {
 
     // Display initial users
     this.onUserListChanged(this.userService.users);
+
+    // this.userService.bindUserListChanged(this.onUserListChanged);
   }
 
   onUserListChanged = (users) => {

@@ -1,36 +1,28 @@
 {
   "users": [
     {
-      "name": "xuanquoche",
-      "age": "17",
+      "name": "xuanquoc",
+      "age": "219",
+      "location": "Japan",
+      "phone": "3455667576",
+      "gpa": "3.21",
+      "id": 1
+    },
+    {
+      "name": "Phone",
+      "age": "20",
       "location": "Japan",
       "phone": "3455667576",
       "gpa": "3.12",
       "id": 2
     },
     {
-      "name": "xuanquocne",
-      "age": "17",
+      "name": "PhonePooptin",
+      "age": "20",
       "location": "Japan",
       "phone": "3455667576",
       "gpa": "3.12",
       "id": 3
-    },
-    {
-      "name": "aa",
-      "age": "17",
-      "location": "Japan",
-      "phone": "3455667576",
-      "gpa": "3.12",
-      "id": 4
-    },
-    {
-      "name": "xuanq",
-      "age": "17",
-      "location": "Japan",
-      "phone": "3455667576",
-      "gpa": "3.12",
-      "id": 5
     }
   ]
 }

@@ -99,6 +99,8 @@ class UserView {
         modal.classList.remove("hide");
         modal.classList.add("show");
       }
+      this.toggleFormBtn(false);
+      this.clearForm();
     });
 
     modal.addEventListener("click", function () {
@@ -109,6 +111,18 @@ class UserView {
     modalContent.addEventListener("click", function (e) {
       e.stopPropagation();
     });
+  }
+
+  toggleFormBtn(save = true) {
+    const btnSave = document.querySelector(".btn-save");
+    const btnUpdate = document.querySelector(".btn-update");
+    if (save) {
+      btnSave.classList.add("hide");
+      btnUpdate.classList.remove("hide");
+    } else {
+      btnSave.classList.remove("hide");
+      btnUpdate.classList.add("hide");
+    }
   }
 
   async getUserById(id) {
@@ -167,25 +181,26 @@ class UserView {
   }
 
   bindEditUser(handler) {
-    this.table.addEventListener("click", (event) => {
-      if (event.target.classList.contains("btn-edit")) {
-        const userId = event.target.dataset.id;
-        this.getUserById(userId).then((user) => {
-          if (user) {
-            this.populateModal(user);
-            const saveChangesBtn = document.querySelector(".btn-save");
-            saveChangesBtn.addEventListener("click", () => {
-              const editedUser = {
-                name: this._nameText,
-                age: this._ageText,
-                location: this._locationText,
-                phone: this._phoneText,
-                gpa: this._gpaText,
-              };
-              handler(userId, editedUser);
-              this.hideModal();
-            });
-          }
+    let getIdRow;
+    let editedUser;
+    this.table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-edit")) {
+        const currentRow = e.target.parentElement.closest("tr");
+        getIdRow = parseInt(currentRow.getAttribute("key"));
+        const user = this.users.find((item) => item.id == getIdRow);
+        this.populateModal(user);
+        this.toggleFormBtn(true);
+        const saveChangesBtn = document.querySelector(".btn-update");
+        saveChangesBtn.addEventListener("click", () => {
+          editedUser = {
+            name: this._nameText,
+            age: this._ageText,
+            location: this._locationText,
+            phone: this._phoneText,
+            gpa: this._gpaText,
+          };
+          handler(getIdRow, editedUser);
+          this.hideModal();
         });
       }
     });
