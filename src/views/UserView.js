@@ -103,7 +103,53 @@ class UserView {
         gpa: this._gpaText,
       });
     });
-    this.hideModal();
+  }
+
+  bindEditUser(handler) {
+    let getIdRow;
+    let editedUser;
+    this.table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-edit")) {
+        const currentRow = e.target.parentElement.closest("tr");
+        getIdRow = parseInt(currentRow.getAttribute("key"));
+        const user = this.users.find((item) => item.id == getIdRow);
+        this.populateModal(user);
+        this.toggleFormBtn(true);
+        const saveChangesBtn = document.querySelector(".btn-update");
+        saveChangesBtn.addEventListener("click", () => {
+          editedUser = {
+            name: this._nameText,
+            age: this._ageText,
+            location: this._locationText,
+            phone: this._phoneText,
+            gpa: this._gpaText,
+          };
+          handler(getIdRow, editedUser);
+          this.hideModal();
+        });
+      }
+    });
+  }
+
+  bindDeleteUser(handler) {
+    let getIdRow;
+    this.table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-delete")) {
+        const currentRow = e.target.parentElement.closest("tr");
+        getIdRow = parseInt(currentRow.getAttribute("key"));
+        handler(getIdRow);
+      }
+    });
+  }
+
+  populateModal(user) {
+    this.inputName.value = user.name;
+    this.inputAge.value = user.age;
+    this.inputLocation.value = user.location;
+    this.inputPhone.value = user.phone;
+    this.inputGpa.value = user.gpa;
+
+    this.openModal();
   }
 }
 

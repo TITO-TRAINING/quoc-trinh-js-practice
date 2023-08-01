@@ -1,5 +1,5 @@
 import User from "../model/userModel";
-
+import axios from "axios";
 class UserService {
   constructor() {
     this.apiUrl = "http://localhost:3000/users";
@@ -39,56 +39,15 @@ class UserService {
     }
   }
 
-  // async editUser(id, userToEdit) {
-  //   try {
-  //     const response = await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(userToEdit),
-  //     });
-  //     const updatedUser = await response.json();
-  //     this.users = this.users.map((user) =>
-  //       user.id === id ? new User(updatedUser) : user,
-  //     );
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Fail to edit user:", error);
-  //   }
-  // }
-
-  // async deleteUser(id) {
-  //   try {
-  //     await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "DELETE",
-  //     });
-  //     this.users = this.users.filter((user) => user.id !== id);
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Fail to delete user:", error);
-  //   }
-  // }
-
-  // async toggleUserComplete(id) {
-  //   try {
-  //     const user = this.users.find((user) => user.id === id);
-  //     const response = await fetch(`${this.apiUrl}/${id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ check: !user.check }),
-  //     });
-  //     const updatedUser = await response.json();
-  //     this.users = this.users.map((user) =>
-  //       user.id === id ? new User(updatedUser) : user,
-  //     );
-  //     this.onUserListChanged(this.users);
-  //   } catch (error) {
-  //     console.error("Error when changing user authentication status:", error);
-  //   }
-  // }
+  async deleteUser(id) {
+    try {
+      await axios.delete(`${this.apiUrl}/${id}`);
+      this.users = this.users.filter((user) => user.id !== id);
+      this.onUserListChanged(this.users);
+    } catch (error) {
+      console.log("fail to delete this user", error);
+    }
+  }
 }
 
 export default UserService;
