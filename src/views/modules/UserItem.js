@@ -1,6 +1,6 @@
 function UserItem({ id, name, age, location, phone, gpa }) {
   return `
-    <tr>
+    <tr key=${id}>
       <td>#${id}</td>
       <td>${name}</td>
       <td>${age}</td>
@@ -8,12 +8,12 @@ function UserItem({ id, name, age, location, phone, gpa }) {
       <td>${phone}</td>
       <td>${gpa}</td>
       <td>
-        <button class="action-btn btn-edit" data-id="${id}">
-        <i class="fa-solid fa-pen"></i>
+        <button class="btn btn-edit position-relative z-index-3" data-id="${id}">
+        Edit
         </button>
   
-        <button class="action-btn btn-delete delete-icon" data-id="${id}">
-        <i class="fa-solid fa-trash"></i>
+        <button class="action-btn btn-delete delete-icon" data-id="${id}" >
+        Delete
         </button>
       </td>
     </tr>
