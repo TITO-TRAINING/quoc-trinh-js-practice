@@ -8,6 +8,7 @@ class UserController {
     this.userView.bindAddUser(this.handleAddUser);
     this.userView.openModalAddBtn();
     this.userView.bindEditUser(this.handleEditUser);
+    this.userView.bindDeleteUser(this.handleDelteUser);
 
     // Display initial users
     this.onUserListChanged(this.userService.users);
@@ -25,6 +26,10 @@ class UserController {
 
   handleEditUser = (id, user) => {
     this.userService.editUser(id, user);
+  };
+
+  handleDelteUser = (id) => {
+    this.userService.deleteUser(id);
   };
 }
 

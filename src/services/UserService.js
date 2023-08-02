@@ -1,6 +1,5 @@
 import User from "../model/userModel";
 import axios from "axios";
-
 class UserService {
   constructor() {
     this.apiUrl = "http://localhost:3000/users";
@@ -47,6 +46,14 @@ class UserService {
       console.error("Fail to add user:", error);
     }
   }
+
+  async deleteUser(id) {
+    try {
+      await axios.delete(`${this.apiUrl}/${id}`);
+      this.users = this.users.filter((user) => user.id !== id);
+      this.onUserListChanged(this.users);
+    } catch (error) {
+      console.log("fail to delete this user", error);
 
   async editUser(id, user) {
     try {

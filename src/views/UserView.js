@@ -206,6 +206,17 @@ class UserView {
     });
   }
 
+  bindDeleteUser(handler) {
+    let getIdRow;
+    this.table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-delete")) {
+        const currentRow = e.target.parentElement.closest("tr");
+        getIdRow = parseInt(currentRow.getAttribute("key"));
+        handler(getIdRow);
+      }
+    });
+  }
+
   populateModal(user) {
     this.inputName.value = user.name;
     this.inputAge.value = user.age;
