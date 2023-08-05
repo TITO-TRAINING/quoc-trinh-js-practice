@@ -2,8 +2,22 @@
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
 }
 
+.form-input{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.input{
+    border-radius: 10px;
+    margin-left: 20px;
+    background-color: antiquewhite;
+}
 .show{
     display: flex;
 }
@@ -40,4 +54,14 @@
 
 .btn-save{
     margin-top: 20px;
+}
+
+.invalid{
+    color: red;
+}
+
+.form-message{
+    text-align: center;
+    margin-left: 19%;
+    font-size: 12px;
 }

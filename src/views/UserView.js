@@ -2,6 +2,7 @@ import UserTable from "./modules/UserTable";
 import Header from "./components/Header";
 import Toast from "./components/Toast";
 import Modal from "./components/Modal";
+import Valdator from "../helper/validation";
 import UserService from "../services/UserService";
 
 class UserView {
@@ -34,6 +35,20 @@ class UserView {
     this.inputPhone = document.querySelector("#phone");
     this.inputLocation = document.querySelector("#location");
     this.inputGpa = document.querySelector("#gpa");
+
+    Valdator({
+      form: '#form-group',
+      errorSelector: '.form-message',
+      rules: [
+        Valdator.isRequired('#name'),
+        Valdator.minLength('#name',3, 'Tên phải trên 3 kí tự !!'),
+        Valdator.isAge('#age'),
+        Valdator.isRequired('#location'),
+        Valdator.isRequired('#phone'),
+        Valdator.minLength('#phone',10, 'Số điện thoại phải đủ 10 số !!'),
+        Valdator.isRequired('#gpa'),
+      ]
+    })
   }
 
   createToast = (mes) => {
@@ -45,6 +60,7 @@ class UserView {
       document.querySelector(".myToast").style.display = "none";
     };
   };
+
 
   get _nameText() {
     return this.inputName.value;
@@ -112,7 +128,7 @@ class UserView {
       e.stopPropagation();
     });
   }
-
+  
   toggleFormBtn(save = true) {
     const btnSave = document.querySelector(".btn-save");
     const btnUpdate = document.querySelector(".btn-update");
@@ -143,27 +159,34 @@ class UserView {
 
   displayUsers(users) {
     this.users = users;
-    let temp = "";
-    users.map(({ id, name, age, location, phone, gpa }) => {
-      temp += `<tr key=${id}>
-      <td>#${id}</td>
-      <td>${name}</td>
-      <td>${age}</td>
-      <td>${location}</td>
-      <td>${phone}</td>
-      <td>${gpa}</td>
-      <td>
-        <button class="btn btn-edit position-relative z-index-3" data-id="${id}">
-        Edit
-        </button>
-        <button class="action-btn btn-delete delete-icon" data-id="${id}" >
-        Delete
-        </button>
-      </td>
-    </tr>`;
+
+    if ($.fn.DataTable.isDataTable("#example")) {
+      $('#example').DataTable().destroy();
+    }
+    this.table.innerHTML = ''
+
+    users.forEach(({ id, name, age, location, phone, gpa }) => {
+      const row = this.table.insertRow();
+      row.setAttribute("key", id); 
+      row.innerHTML = `<td>${id}</td>
+                      <td>${name}</td>
+                      <td>${age}</td>
+                      <td>${location}</td>
+                      <td>${phone}</td>
+                      <td>${gpa}</td>
+                      <td>
+                        <button class="btn btn-edit position-relative z-index-3 border border-dark" data-id="${id}">
+                          Edit
+                        </button>
+                        <button class="action-btn btn btn-delete delete-icon border border-dark" data-id="${id}">
+                          Delete
+                        </button>
+                      </td>`;
     });
-    this.table.innerHTML = temp;
+
+    $('#example').DataTable();
   }
+  
 
   bindAddUser(handler) {
     this.form.addEventListener("submit", (event) => {
@@ -217,14 +240,33 @@ class UserView {
     });
   }
 
-  populateModal(user) {
-    this.inputName.value = user.name;
-    this.inputAge.value = user.age;
-    this.inputLocation.value = user.location;
-    this.inputPhone.value = user.phone;
-    this.inputGpa.value = user.gpa;
+  bindSearch(handler){
+    const inputSearch = document.querySelector("#input-search");
+    inputSearch.addEventListener("keypress", (e) => {
+      if(e.keyCode === 13){
+        handler(e.target.value)
+      }
+      console.log(e.keyCode == 8)
+    })
 
-    this.openModal();
+    inputSearch.addEventListener('keyup', (e) =>{
+      if(e.keyCode === 8){
+        handler(e.target.value)
+      }
+    })
+  }
+
+  populateModal(user) {
+    if (user) {
+      this.inputName.value = user.name;
+      this.inputAge.value = user.age;
+      this.inputLocation.value = user.location;
+      this.inputPhone.value = user.phone;
+      this.inputGpa.value = user.gpa;
+      this.openModal();
+    } else {
+      console.error("User not found");
+    }
   }
 }
 

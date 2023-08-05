@@ -4,6 +4,7 @@ class UserService {
   constructor() {
     this.apiUrl = "http://localhost:3000/users";
     this.users = [];
+    this.filteredUsers = [];
     this.onUserListChanged = null;
     this.fetchUsers();
   }
@@ -17,8 +18,9 @@ class UserService {
       let { data } = await axios.get(this.apiUrl);
       if (data) {
         this.users = data.map((user) => new User(user));
+        this.filteredUsers = [...this.users];
       }
-      this.onUserListChanged(this.users);
+      this.onUserListChanged(this.filteredUsers);
     } catch (error) {
       console.error("Fail to load user list:", error);
     }
@@ -39,7 +41,6 @@ class UserService {
       const { data } = await axios.post(this.apiUrl, user);
       if (data) {
         this.users.push(new User(data));
-        console.log(data);
       }
       this.onUserListChanged(this.users);
     } catch (error) {
@@ -54,6 +55,8 @@ class UserService {
       this.onUserListChanged(this.users);
     } catch (error) {
       console.log("fail to delete this user", error);
+    }
+  }
 
   async editUser(id, user) {
     try {
@@ -76,6 +79,18 @@ class UserService {
     } catch (error) {
       console.error("Fail to edit user:", error);
     }
+  }
+
+  search(name) {
+    if (name) {
+      this.filteredUsers = this.users.filter((user) =>
+        user.name.toLowerCase().includes(name.toLowerCase())
+      );
+    } else {
+      // If search input is empty, display the original user list
+      this.filteredUsers = [...this.users];
+    }
+    this.onUserListChanged(this.filteredUsers); // Display the filtered or original list
   }
 }
 
