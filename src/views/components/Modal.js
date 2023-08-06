@@ -37,7 +37,7 @@ function Modal() {
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-save">Save</button>
-                <button type="button" class="btn btn-primary btn-update hide">Update</button>
+                <button type="submit" class="btn btn-primary btn-update hide">Update</button>
             </form>
     </div>
 </div>

@@ -42,8 +42,7 @@ function Validator(options) {
               formIsvalid = false;
             }
         });
-        if(formIsvalid && typeof options.onSubmit === 'function' ){
-          console.log(formIsvalid)
+        if(formIsvalid){
         options.onSubmit();
       }
     };

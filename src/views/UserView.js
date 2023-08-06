@@ -1,6 +1,6 @@
 import UserTable from './modules/UserTable';
 import Header from './components/Header';
-import { createToast} from './components/handleToast';
+import { createToast } from './components/handleToast';
 import Modal from './components/Modal';
 import Valdator from '../helper/validation';
 import UserService from '../services/UserService';
@@ -126,6 +126,7 @@ class UserView {
     } else {
       btnSave.classList.remove('hide');
       btnUpdate.classList.add('hide');
+      this.form.remove(btnSave)
     }
   }
 
@@ -177,7 +178,6 @@ class UserView {
 
   bindAddUser(handler) {
     this.form.addEventListener('submit', (event) => {
-      
       event.preventDefault();
       Valdator({
         form: '#form-group',
@@ -191,7 +191,7 @@ class UserView {
           Valdator.minLength('#phone', 10, 'Số điện thoại phải đủ 10 số !!'),
           Valdator.isRequired('#gpa'),
         ],
-        onSubmit: function () {
+        onSubmit: () => {
           handler({
             name: this._nameText,
             age: this._ageText,
@@ -199,7 +199,6 @@ class UserView {
             phone: this._phoneText,
             gpa: this._gpaText,
           });
-    
           this.clearForm();
           this.hideModal();
           createToast('success', 'Insert Success !');
@@ -219,19 +218,35 @@ class UserView {
         this.populateModal(user);
         this.toggleFormBtn(true);
         const saveChangesBtn = document.querySelector('.btn-update');
-        saveChangesBtn.addEventListener('click', () => {
-          // Validate the form
+        saveChangesBtn.addEventListener('click', (e) => {
+         
+          Valdator({
+            form: '#form-group',
+            errorSelector: '.form-message',
+            rules: [
+              Valdator.isRequired('#name'),
+              Valdator.minLength('#name', 3, 'Tên phải trên 3 kí tự !!'),
+              Valdator.isAge('#age'),
+              Valdator.isRequired('#location'),
+              Valdator.isRequired('#phone'),
+              Valdator.minLength('#phone', 10, 'Số điện thoại phải đủ 10 số !!'),
+              Valdator.isRequired('#gpa'),
+            ],
+            onSubmit: () => {
+              editedUser = {
+                name: this._nameText,
+                age: this._ageText,
+                location: this._locationText,
+                phone: this._phoneText,
+                gpa: this._gpaText,
+              };
+              console.log(1)
+              handler(getIdRow, editedUser);
+              this.hideModal();
+              createToast('success', 'Update Success !');
+            },
+          });
 
-          editedUser = {
-            name: this._nameText,
-            age: this._ageText,
-            location: this._locationText,
-            phone: this._phoneText,
-            gpa: this._gpaText,
-          };
-          handler(getIdRow, editedUser);
-          this.hideModal();
-          createToast('success', 'Update Success !');
         });
       }
     });
