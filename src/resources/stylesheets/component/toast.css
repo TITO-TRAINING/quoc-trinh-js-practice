@@ -1,13 +1,113 @@
-.toast{
-    max-width: 500px;
-    position: fixed;
-    top: 16px;
-    right: 128px;
-    border: 1px black solid;
-    padding: 5px 20px;
-    border-radius: 8px;
+.myToast {
+  position: fixed;
+  top: 30px;
+  right: 310px;
+  z-index: 99;
+}
+.column{
+    vertical-align: middle;
+    font-size: 18px;
+    width: 80%;
+}
+.myToast .toast {
+  width: 250px;
+  height: 100px;
+  position: fixed;
+  z-index: 1000;
+  overflow: hidden;
+  border-radius: 4px;
+  padding: 16px 17px;
+  margin-bottom: 10px;
+  background: #ffffff;
+  justify-content: space-between;
+  animation: show_toast 0.3s ease forwards;
 }
 
-.toast-body{
-    margin-right: 15px;
+@keyframes show_toast {
+  0% {
+    transform: translateX(100%);
+  }
+  40% {
+    transform: translateX(-5%);
+  }
+  80% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-10px);
+  }
+}
+.myToast .toat.hiden {
+  animation: hide_toast 0.3s ease forwards;
+}
+@keyframes hide_toast {
+  0% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(0%);
+  }
+  80% {
+    transform: translateX(-5%);
+  }
+  100% {
+    transform: translateX(calc(100% + 20px));
+  }
+}
+.toast::before {
+  position: absolute;
+  content: '';
+  height: 3px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  animation: progress 5s linear forwards;
+}
+.toast:not(.showing):not(.show) {
+    opacity: 0.8 !important;
+}
+
+.toast:not(.show) {
+    display: block !important;
+}
+@keyframes progress {
+  100% {
+    width: 0%;
+  }
+}
+.toast.success{
+    display: flex !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.toast.success::before,
+.btn#success {
+  background: #54c712;
+}
+.toast.error::before,
+.btn#error {
+  background: red;
+}
+.toast .column i {
+  font-size: 1.75rem;
+}
+.toast.success .column i {
+  color: #54c712;
+}
+.toast.error .column i {
+  color: red;
+}
+
+.toast .column span {
+  font-size: 0.85rem;
+  margin-left: 17px;
+  font-size: 16px;
+}
+.toast i:last-child {
+  color: #aeb0d7;
+  cursor: pointer;
+}
+.toast i:last-child:hover {
+  color: black;
 }

@@ -1,23 +1,20 @@
-function Valdator(options) {
-
-    var selectorRule = {}
+function Validator(options) {
+  var selectorRule = {};
+  var formIsvalid = false;
 
   function validate(inputElement, rule) {
-    var errorMessage ;
+    var errorMessage;
     var errorElement = inputElement.parentElement.querySelector(
       options.errorSelector,
     );
 
-    //lấy ra các rule của selector
-    var rules = selectorRule[rule.selector]
+    var rules = selectorRule[rule.selector];
 
-    //lặp qua tửng rule và kiểm tra
-    //nếu có lỗi thì dừng viejc kiểm tra
-    for(var i = 0; i < rules.length; ++i){
-        errorMessage = rules[i](inputElement.value)
-        if(errorMessage){
-            break;
-        }
+    for (var i = 0; i < rules.length; ++i) {
+      errorMessage = rules[i](inputElement.value);
+      if (errorMessage) {
+        break;
+      }
     }
 
     if (errorMessage) {
@@ -27,39 +24,43 @@ function Valdator(options) {
       errorElement.innerText = '';
       inputElement.parentElement.classList.remove('invalid');
     }
+    return !errorMessage
   }
 
-  //lấy element của form cần validate
+
   var formElement = document.querySelector(options.form);
   if (formElement) {
-    formElement.onsubmit = function(e){
-        e.preventDefault();
-
-        //lặp qua từng rule và validate
-        options.rules.forEach((rule) => {
-            var inputElement = formElement.querySelector(rule.selector);
-            validate(inputElement, rule);
+    formElement.onsubmit = function (e) {
+      formIsvalid = true;
+      const selectors = new Set();
+      e.preventDefault();
+      options.rules.forEach((rule) => {
+          selectors.add(rule.selector);
+          var inputElement = formElement.querySelector(rule.selector);
+          let isValid = validate(inputElement, rule);
+          if (!isValid) {
+              formIsvalid = false;
+            }
         });
-    }
+        if(formIsvalid && typeof options.onSubmit === 'function' ){
+          console.log(formIsvalid)
+        options.onSubmit();
+      }
+    };
     options.rules.forEach((rule) => {
+      if (Array.isArray((selectorRule[rule.selector] = rule.test))) {
+        selectorRule[rule.selector].push(rule.test);
+      } else {
+        selectorRule[rule.selector] = [rule.test];
+      }
 
-        //lưu lại rules cho mỗi input
-
-        if(Array.isArray( selectorRule[rule.selector] = rule.test)){
-            selectorRule[rule.selector].push(rule.test);
-        }else{
-            selectorRule[rule.selector] = [rule.test];
-        }
-       
       var inputElement = formElement.querySelector(rule.selector);
 
       if (inputElement) {
-        //xử lý trường hợp blur ra khỏi input
         inputElement.onblur = function () {
           validate(inputElement, rule);
         };
 
-        //xử lý mỗi khi người dùng nhập vào input
         inputElement.oninput = function () {
           var errorElement = inputElement.parentElement.querySelector(
             options.errorSelector,
@@ -69,12 +70,10 @@ function Valdator(options) {
         };
       }
     });
-
-
   }
 }
 
-Valdator.isRequired = function (selector,) {
+Validator.isRequired = function (selector) {
   return {
     selector: selector,
     test: function (value) {
@@ -83,22 +82,26 @@ Valdator.isRequired = function (selector,) {
   };
 };
 
-Valdator.minLength = function (selector, max, mes) {
+Validator.minLength = function (selector, max, mes) {
   return {
     selector: selector,
     test: function (value) {
-      return value.length >= max ? undefined : mes|| `Vui lòng nhập trên ${max} kí tự !!!`;
+      return value.length >= max
+        ? undefined
+        : mes || `Vui lòng nhập trên ${max} kí tự !!!`;
     },
   };
 };
 
-Valdator.isAge = function (selector) {
-    return {
-      selector: selector,
-      test: function (value) {
-        return (value >=1 && value <= 120) ? undefined :  'Tuổi không nhỏ hơn 1 và không lớn hơn 120'; 
-      }
-    };
+Validator.isAge = function (selector) {
+  return {
+    selector: selector,
+    test: function (value) {
+      return value >= 1 && value <= 120
+        ? undefined
+        : 'Tuổi không nhỏ hơn 1 và không lớn hơn 120';
+    },
+  };
 };
 
-export default Valdator;
+export default Validator;

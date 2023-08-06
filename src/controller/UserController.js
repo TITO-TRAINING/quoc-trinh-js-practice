@@ -19,15 +19,11 @@ class UserController {
   };
 
   handleAddUser = (user) => {
-    if(this.userView.validate(user.name,user.age,user.location,user.phone,user.gpa)){
-      this.userService.addUser(user);
-    }
+    this.userService.addUser(user);
   };
 
   handleEditUser = (id, user) => {
-    if(this.userView.validate(user.name,user.age,user.location,user.phone,user.gpa)){
-      this.userService.editUser(id, user);
-    }
+    this.userService.editUser(id, user);
   };
 
   handleDelteUser = (id) => {
