@@ -1,6 +1,6 @@
 import UserTable from './modules/UserTable';
 import Header from './components/Header';
-import { createToast, removeToast } from './components/handleToast';
+import { createToast} from './components/handleToast';
 import Modal from './components/Modal';
 import Valdator from '../helper/validation';
 import UserService from '../services/UserService';
